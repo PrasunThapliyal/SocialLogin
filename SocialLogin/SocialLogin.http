@@ -1,0 +1,6 @@
+@SocialLogin_HostAddress = http://localhost:5231
+
+GET {{SocialLogin_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

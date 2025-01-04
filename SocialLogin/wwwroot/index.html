@@ -1,0 +1,51 @@
+﻿// Minimal Frontend: HTML + JS for Google Authentication
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with Google</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        const CLIENT_ID = '390050458030-mcnome9sfelcht8p9nl3aabi32qudanr.apps.googleusercontent.com';
+
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+            fetch('/api/Auth/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token: response.credential })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Login Successful!');
+                    // Redirect or perform post-login actions
+                } else {
+                    alert('Login failed!');
+                }
+            })
+            .catch(err => console.error('Error:', err));
+        }
+
+        function initializeGoogleSignIn() {
+            google.accounts.id.initialize({
+                client_id: CLIENT_ID,
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("googleSignInDiv"),
+                { theme: "outline", size: "large" } // Customization options
+            );
+        }
+
+        window.onload = initializeGoogleSignIn;
+    </script>
+</head>
+<body>
+    <div id="googleSignInDiv"></div>
+</body>
+</html>
